@@ -1,12 +1,24 @@
+using System.Collections;
 using UnityEngine;
 
-public class tower_Lvl1 : MonoBehaviour
+public class Tower : MonoBehaviour
 {
     private Transform target;
-    public Transform partToRotate;
+
+    [Header("Attributes")]
+    
     public float targetRange = 15f;
-    public float rotateSpeed = 10f;
+    public float fireRate = 0.5f;
+    public float nextFire = 0.0f;
+    
+    [Header("Unity Setup Fields")]
+    
     public string enemyTag = "Enemy";
+
+    public Transform partToRotate;
+    public float rotateSpeed = 10f;
+    public GameObject projectilePrefab;
+    public Transform firePoint;
 
     // Start is called before the first frame update
     void Start()
@@ -48,8 +60,23 @@ public class tower_Lvl1 : MonoBehaviour
         Vector3 rotation = Quaternion.Lerp(partToRotate.rotation, lookRotation, Time.deltaTime * rotateSpeed).eulerAngles;
         partToRotate.rotation = Quaternion.Euler(0f,rotation.y,0f);
 
+        // Checking fireRate then firing
+        if (Time.time > nextFire)
+        {
+            nextFire = Time.time + fireRate;
+            Shoot();
+        }
+
     }
 
+    private void Shoot()
+    {
+        GameObject ArrowGO = (GameObject)Instantiate(projectilePrefab,firePoint.position,firePoint.rotation);
+        Arrow arrow = ArrowGO.GetComponent<Arrow>();
+        if (arrow != null)
+            arrow.Seek(target);
+
+    }
 
     private void OnDrawGizmos() {
         Gizmos.color = Color.red;

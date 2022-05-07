@@ -29,7 +29,7 @@ public class WaveSpawner : MonoBehaviour
             SpawnEnemy();
             yield return new WaitForSeconds(0.5f);
         }
-        Debug.Log("Wave Incoming!");
+        
     }
 
     private void SpawnEnemy()

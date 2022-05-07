@@ -1,0 +1,42 @@
+using System;
+using UnityEngine;
+
+public class Arrow : MonoBehaviour
+{
+    private Transform target;
+
+    public float arrowSpeed = 70f;
+
+    public void Seek(Transform _target)
+    {
+        target = _target;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (target == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Vector3 dir = target.position - transform.position;
+        float distanceThisFrame = arrowSpeed * Time.deltaTime;
+
+        if (dir.magnitude <= distanceThisFrame)
+        {
+            HitTarget();
+            return;
+        }
+
+        transform.Translate(dir.normalized * distanceThisFrame, Space.World);
+
+    }
+
+    private void HitTarget()
+    {
+        Destroy(target.gameObject);
+        Destroy(gameObject);
+    }
+}
